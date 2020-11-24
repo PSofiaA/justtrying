@@ -15,13 +15,13 @@ if __name__ == '__main__':
         n = cv2.imread(img)
         cv_img.append(n)
 
-    # face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+     face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
-    # gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
-    #canvas = face_detection(gray, cv_img, face_cascade)
+     gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
+    canvas = face_detection(gray, cv_img, face_cascade)
 
-    #while True:
-        #cv2.imshow('image', canvas)
-        #if cv2.waitKey(0) & 0xFF == ord('s'):
-            #break
-    #cv2.imwrite('saveit.png', cv_img)
+    while True:
+        cv2.imshow('image', canvas)
+        if cv2.waitKey(0) & 0xFF == ord('s'):
+            break
+    cv2.imwrite('saveit.png', cv_img)
