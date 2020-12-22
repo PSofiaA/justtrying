@@ -1,0 +1,197 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#define SET "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm123456789"
+int r()
+{
+    int rows;        // количество слов
+    printf("How much words?\n");    // загадка от Жана Фреско
+    scanf("%d", &rows);
+    return rows;
+}
+char** in(int rows)
+{
+    int cols = 256;        // максимальная длина слова
+    int i = 0, j = 0;            // счетчик
+
+    // выделяю память под указатели на слова
+    char** words = (char**)malloc(rows * sizeof(char*));
+    // на каждый указатель выделяю память под само слово
+    for (i = 0; i < rows; i++)
+        words[i] = (char*)malloc(cols * sizeof(char));
+    //считываю слова в массив
+    for (i = 0; i < rows; i++)
+        scanf("%s", words[i]);
+    return words;
+}
+char** f() //ввод из файла
+{
+    FILE* myfile = fopen("inputfrom.txt", "r");
+    if (myfile == NULL)
+   {
+        printf("Error, cannot open this file");
+      return 0;
+    }
+
+    int cols = 256;        // максимальная длина слова
+    int i = 0, j = 0;    // счетчик
+    int rows = 4;
+    // выделяю память под указатели на строки
+    char** words = (char**)malloc(rows * sizeof(char*));
+    // на каждый указатель выделяю память под саму строку
+    for (i = 0; i < rows; i++)
+    words[i] = (char*)malloc(cols * sizeof(char));
+    //считываю слова в массив
+    for (i = 0; i < rows; i++) 
+        fscanf(myfile, "%s", words[i]);
+    for (int i = 0; i < rows; i++)
+    printf("%s ", words[i]);
+    printf("\n");
+    return words;
+}
+char** rstring(int rows) //сколько слов создать 
+{
+        int i, set_len, k;
+        int len;
+        char** words = (char**)malloc(rows * sizeof(char*));
+        for (i = 0; i < rows; i++)  //пока не прошли все слова
+        {
+            
+            len = rand() % 9 + 2; //рандомное число в диапазоне
+            printf("len:");
+            printf("%d\n", len - 1);
+            words[i] = (char*)malloc(len * sizeof(char));
+            set_len = strlen(SET);
+            for (k = 0; k < len - 1; k++)
+                words[i][k] = SET[rand() % set_len]; //рандомные символы из заданного массива
+                words[i][k] = '\0';
+
+            printf("%s\n", words[i]);
+        }
+        return words;
+}
+char** rbuild(int rows, char** words)
+{
+
+    int i;   
+    for (i = 0; i < rows/2; i++) {
+        char* temp = words[i];
+        words[i] = words[rows- i - 1];
+        words[rows - i -1] = temp;
+    }
+    for (int i = 0; i < rows; i++)
+        printf("%s ", words[i]);
+    printf("\n");
+    //putchar('\n');
+   
+    //for (j = rows - 1; j > 0; j--)
+    //    printf("%s ", words[i]);
+    //printf("%s\n", words[i]);
+    //расположить слова в обратном порядке
+
+}
+char* bubble(int rows, char** words)
+{
+    int flag = 1;    // флаг, что обменов не было
+    while (flag)
+    {
+        flag = 0;
+        for (int i = 1; i < rows; i++)
+        {
+            if (strlen(words[i - 1]) > strlen(words[i]))
+            {
+                // мен указатели
+                char* tmp = words[i - 1];
+                words[i - 1] = words[i];
+                words[i] = tmp;
+                flag = 1;
+            }
+        }
+    }
+    for (int i = 0; i < rows; i++)
+        printf("%s ", words[i]);
+    printf("\n");
+   
+    
+    for (int i = 0; i < rows; i++)
+        free(words[i]);
+    free(words);
+    return 0;
+}
+void start()
+{
+    FILE* fn;
+    fn = fopen("save.txt", "a");
+    fprintf(fn, "\n$\nStart of sesh\n");
+    fclose(fn);
+}
+// Конец записи
+void end()
+{
+    FILE* fe;
+    fe = fopen("save.txt", "a");
+    fprintf(fe, "\nEnd of sesh\n$\n");
+    fclose(fe);
+}
+char* save_input(char** s, int size)
+{
+    FILE* fi;
+    fi = fopen("save.txt", "a");
+    for (int i = 0; i < size; i++)
+        fprintf(fi, "\nInput: %s\n", s[i]);
+    fclose(fi);
+}
+// Запись сортировки в файл
+char* save_sort(char* s, int t, double time)
+{
+    FILE* fs;
+    fs = fopen("save.txt", "a");
+    if (t == 0)
+        fprintf(fs, "\nBubble sort: %s\nTime: %lf\n", s, time);
+    if (t == 1)
+        fprintf(fs, "Q sort: %s\nTime: %lf\n", s, time);
+    fclose(fs);
+}
+char* qsortRecursive(char** mas, int size)
+{
+
+    int i = 0;
+    int j = size - 1;
+    char* mid = mas[size / 2];
+    do {
+        while (strlen(mas[i]) < strlen(mid)) {
+            i++;
+        }
+        while (strlen(mas[j]) > strlen(mid)) {
+            j--;
+        }
+        if (i <= j) {
+            char* tmp = mas[i];
+            mas[i] = mas[j];
+            mas[j] = tmp;
+
+            i++;
+            j--;
+        }
+    } while (i <= j);
+    if (j > 0) {
+        qsortRecursive(mas, j + 1);
+    }
+    if (i < size) {
+        qsortRecursive(&mas[i], size - i);
+    }
+    for (int i = 0; i < size; i++)
+        printf("%s ", mas[i]);
+    printf("\n");
+    return mas[i];
+}
+
+int main()
+{
+int k = r();
+rbuild(k, rstring(k));
+//qsortRecursive( rstring(k),k);
+    return 0;
+}
