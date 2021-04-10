@@ -1,2 +1,2 @@
 # justtrying
-heres the delete implementation https://www.cyberforum.ru/cpp-beginners/thread2241699.html
+heres the delete implementationhttps://www.cyberforum.ru/c-beginners/thread1748818.html
